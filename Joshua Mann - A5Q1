@@ -1,0 +1,40 @@
+function setup() {
+  createCanvas(960, 540);
+  bubble1 = new Bubble(random(50,910),random(50,490),random(36,96))
+  bubble2 = new Bubble(random(50,910),random(50,490),random(36,96))
+  bubble3 = new Bubble(random(50,910),random(50,490),random(36,96))
+  bubble4 = new Bubble(random(50,910),random(50,490),random(36,96))
+  bubble5 = new Bubble(random(50,910),random(50,490),random(36,96))
+}
+
+function draw() {
+  background(1);
+  bubble1.move()
+  bubble1.show()
+  bubble2.move()
+  bubble2.show()
+  bubble3.move()
+  bubble3.show()
+  bubble4.move()
+  bubble4.show()
+  bubble5.move()
+  bubble5.show()
+}
+
+class Bubble {
+  constructor(x,y,d) {
+    this.x = x;
+    this.y = y;
+    this.d = d
+  }
+  move() {
+    this.x = this.x + random(-5, 5);
+    this.y = this.y + random(-5, 5);
+  }
+  show(){
+    stroke(random(100,255), random(100,255), random(100,255));
+    strokeWeight(4)
+    noFill();
+    ellipse(this.x,this.y, this.d)
+  }
+}
