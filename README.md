@@ -8,3 +8,6 @@ https://editor.p5js.org/joshua.mann/sketches/bgo9YekEk
 
 Question 2: Having plenty of practice with loops, and a little bit with arrays from last assignment, this was actually quite easy. However at first I didn't understand why i needed a loop in setup, then one in draw as well, but it all makes sense now. This is a easy way to have multiple objects without having hundreds of lines of code.
 https://editor.p5js.org/joshua.mann/sketches/QRjrR7y-N
+
+Question 3: Video really guided me through a lot of this. Once I figured out creating the loop for one class, then the rest were easy. Had problems with getting my fish to flip when it collided with the wall, but it was just a simple push() and pop() fix. 
+https://editor.p5js.org/joshua.mann/sketches/3WI2uJjjM
