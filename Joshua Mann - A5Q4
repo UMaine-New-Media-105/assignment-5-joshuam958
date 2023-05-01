@@ -1,0 +1,155 @@
+function setup() {
+  angleMode(DEGREES);
+  foodX = random(5,6); //variable for breeder movement
+  fishX = random(3,4); //variable for catcher movement
+  spriteWidth = 15
+  spawnDelay = 90
+  framesDelayed = 0
+  
+  createCanvas(960, 540);
+  particles = []; //defining bubbles as an array
+  for (let particlesDefined = 0; particlesDefined < 50; particlesDefined++) {
+    let x = random(width);
+    let y = random(height);
+    let d = random(36, 96);
+    particles.push(new Particle(x, y, d));
+  }
+
+  breeders = []; //defining breeders as an array
+  for (let breedersDefined = 0; breedersDefined < 25; breedersDefined++) {
+    let x = random(width);
+    let y = random(height);
+    breeders.push(new Breeder(x, y));
+  }
+
+  catchers = []; //defining catchers as an array
+  for (let catchersDefined = 0; catchersDefined < 2; catchersDefined++) {
+    let x = random(width);
+    let y = random(height);
+    catchers.push(new Catcher(x, y));
+  }
+}
+function draw() {
+  background(0, 160, 200);
+  framesDelayed++ // prevents multiple breeders from spawning on collision
+  //shows particles
+  for (let particlesShown = 0; particlesShown < particles.length; particlesShown++) {
+    particles[particlesShown].move();
+    particles[particlesShown].show();
+  }
+  //shows breeders
+  for (let breedersShown = 0; breedersShown < breeders.length; breedersShown++) {
+    thisBreeder = breeders[breedersShown]
+    thisBreeder.move();
+    thisBreeder.show();
+    if (framesDelayed > spawnDelay){
+    for (let matesChecked = 0; matesChecked < breeders.length; matesChecked++) { //spawns child on breeder collision
+      let proposedMate = breeders[matesChecked];
+      let isDifferentBreeder = (breedersShown !== matesChecked);
+      let spriteDistance = dist(thisBreeder.x,thisBreeder.y,proposedMate.x,proposedMate.y);
+      if (isDifferentBreeder && isTouching(thisBreeder, proposedMate)) {
+        let x = random(width)
+        let y = random(height)
+        breeders.push(new Breeder(x,y));
+        framesDelayed = 0;
+        break;
+      }
+    }
+  }
+  }
+  //shows catchers
+  for (let catchersShown = 0; catchersShown < catchers.length; catchersShown++) {
+    thisCatcher = catchers[catchersShown]
+    thisCatcher.move();
+    thisCatcher.show();
+  }
+}
+
+function isTouching(sprite1,sprite2){
+  let spriteDistance = dist(sprite1.x,sprite1.y, sprite2.x, sprite2.y);
+  if (spriteDistance < spriteWidth){
+    return true;
+  } else{
+    return false;
+  }
+}
+
+//create bubble particle
+class Particle {
+  constructor(x, y, d) {
+    this.x = x; //x var
+    this.y = y; //y var
+    this.d = d; //diameter var
+  }
+  move() {
+    //causes bubbles to jitter
+    this.x = this.x + random(-5, 5);
+    this.y = this.y + random(-5, 5);
+  }
+  show() {
+    stroke(random(100, 255), random(100, 255), random(100, 255)); //makes bubbles flash colors
+    strokeWeight(4);
+    noFill();
+    ellipse(this.x, this.y, this.d);
+  }
+}
+//create fish food breeder
+class Breeder {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.foodX = foodX;
+  }
+  move() {
+    this.x = this.x + this.foodX;
+    let IsTooFarLeft = this.x < 0;
+    let IsTooFarRight = this.x > width;
+    if (IsTooFarLeft || IsTooFarRight) { //wall colision
+      this.foodX = -this.foodX;
+      this.y = random(height);
+    }
+  }
+  show() {
+    noStroke();
+    fill("darksalmon");
+    rect(this.x, this.y, 15);
+  }
+}
+//create fish catcher
+class Catcher {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.fishX = -fishX;
+    this.IsSwimmingRight = false;  // variable to determine which way fish is moving
+  }
+  move() {
+    this.x = this.x + this.fishX;
+    let IsTooFarLeft = this.x < 0;
+    let IsTooFarRight = this.x > width;
+    if (IsTooFarLeft || IsTooFarRight) {
+      this.fishX = -this.fishX;
+      this.y = random(height);
+      this.IsSwimmingRight = !this.IsSwimmingRight;
+    }
+  }
+  show() {
+    push();
+    translate(this.x, this.y);
+    noStroke();
+    if (this.IsSwimmingRight) { // causes fish to change where it's facing when changing direction
+      fill("white");
+      ellipse(0, 0, 120, 70);
+      triangle(-60, 0, -90, -30, -90, 30);
+      fill("black");
+      ellipse(30, -15, 10);
+    } else {
+      fill("white");
+      ellipse(0, 0, 120, 70);
+      triangle(60, 0, 90, -30, 90, 30);
+      fill("black");
+      ellipse(-30, -15, 10);
+    }
+    pop();
+  }
+}
